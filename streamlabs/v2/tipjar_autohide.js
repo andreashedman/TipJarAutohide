@@ -11,7 +11,7 @@ class TipJar_Autohide
       console.log("TipJar_Autohide::initialize");
       console.log(document);
 
-      if (socketToken == null || socketToken == undefined || socketToken.length == 0)
+      if (this.socketToken == null || this.socketToken == undefined || this.socketToken.length == 0)
       {
          return false;
       }
