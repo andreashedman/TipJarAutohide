@@ -55,6 +55,10 @@ class TipJar_Autohide
 
    onTipJarBitsFadein()
    {
+
+      console.log("TipJar_Autohide::onTipJarBitsFadein");
+      console.log(this);
+      console.log( this.container_cup);
       this.bits_opacity += this.addition;
 
       if (this.bits_opacity > 1)
@@ -77,6 +81,9 @@ class TipJar_Autohide
 
    onTipJarCupFadein()
    {
+      console.log("TipJar_Autohide::onTipJarCupFadein");
+      console.log(this);
+      console.log( this.container_bits);
       this.cup_opacity += this.addition;
 
       if (this.cup_opacity > 1)
@@ -87,11 +94,11 @@ class TipJar_Autohide
 
        if (this.cup_opacity < 1)
       {
-         this.cup_timerId = setTimeout(onTipJarCupFadein, this.timeoutFrequency);
+         this.cup_timerId = setTimeout(this.onTipJarCupFadein, this.timeoutFrequency);
          // 	localStorage.setItem("autohide_cup_timerId", autohide_cup_timerId+"");
       } else
       {
-         this.cup_timerId = setTimeout(onTipJarCupFadeout, this.cup_inactivityTimeout);
+         this.cup_timerId = setTimeout(this.onTipJarCupFadeout, this.cup_inactivityTimeout);
          //   localStorage.setItem("autohide_cup_timerId", autohide_cup_timerId+"");
       }
    }
