@@ -161,7 +161,7 @@ class TipJar_Autohide
          instance.onStreamlabsEvent(eventData.for, eventData.type);
       });
 
-      instance.onStreamlabsEvent("initialize", "initialize);
+      instance.onStreamlabsEvent("initialize", "initialize");
    }
 
    initialize()
