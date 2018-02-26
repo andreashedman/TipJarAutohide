@@ -22,10 +22,10 @@ class TipJar_Autohide
       }
    }
 
-   onStreamlabsEvent(eventData)
+   onStreamlabsEvent(_for, _type)
    {
       console.log("TipJar_Autohide::onStreamlabsEvent");
-      console.log("eventData.for = " + eventData.for + "   eventData.type = " + eventData.type);
+      console.log("_for = " + _for + "   _type = " + _type);
 
       // todo, make sure this is a event we are interested in.
       // todo, kill any previous timers, should we have a destroy method (deleteTimers) and store the object in webstorage and reset it that way?
@@ -48,8 +48,8 @@ class TipJar_Autohide
       this.container_bits.style.opacity = this.bits_opacity;
       this.container_cup.style.opacity = this.cup_opacity;
 
-      this.cup_timerId = setTimeout(onTipJarCupFadein, this.cup_fadeinTimeout);
-      this.bits_timerId = setTimeout(onTipJarBitsFadein, this.bits_fadeinTimeout);
+      this.cup_timerId = setTimeout(this.onTipJarCupFadein, this.cup_fadeinTimeout);
+      this.bits_timerId = setTimeout(this.onTipJarBitsFadein, this.bits_fadeinTimeout);
 
    }
 
@@ -158,8 +158,10 @@ class TipJar_Autohide
 
          console.log("streamlabs event");
          console.log("eventData.for = " + eventData.for + "   eventData.type = " + eventData.type);
-         instance.onStreamlabsEvent(eventData);
+         instance.onStreamlabsEvent(eventData.for, eventData.type);
       });
+
+      instance.onStreamlabsEvent("initialize", "initialize);
    }
 
    initialize()
