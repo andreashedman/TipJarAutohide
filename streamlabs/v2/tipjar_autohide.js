@@ -175,6 +175,12 @@ class TipJar_Autohide
 
       this.container_bits = document.querySelector("canvas:first-of-type");
       this.container_cup = document.getElementById("widget");
+      console.log("container_bits");
+      console.log(this.container_bits);
+
+      console.log("container_cup");
+      console.log(this.container_cup);
+
 
       if (this.container_bits == null || this.container_bits == undefined)
       {
