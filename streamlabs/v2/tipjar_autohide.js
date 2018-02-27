@@ -7,18 +7,19 @@ class TipJar_Autohide
 
    }
 
-   deleteTimers()
+   deleteTimers(instance)
    {
-      if (this.cup_timerId != null)
+      console.log("TipJar_Autohide::deleteTimers");
+      if (instance.cup_timerId != null)
       {
-         clearTimeout(this.cup_timerId);
-         this.cup_timerId = null;
+         clearTimeout(instance.cup_timerId);
+         instance.cup_timerId = null;
       }
 
-      if (this.bits_timerId != null)
+      if (instance.bits_timerId != null)
       {
-         clearTimeout(this.bits_timerId);
-         this.bits_timerId = null;
+         clearTimeout(instance.bits_timerId);
+         instance.bits_timerId = null;
       }
    }
 
@@ -301,6 +302,7 @@ class TipJar_Autohide
       this.cup_timerId = null;
       this.bits_timerId = null;
 
+      $(window).on('beforeunload', this.deleteTimers.bind(null, this));
 
 
       //   console.log(document);
