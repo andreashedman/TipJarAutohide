@@ -25,7 +25,33 @@ class TipJar_Autohide
    onStreamlabsEvent(_for, _type)
    {
       console.log("TipJar_Autohide::onStreamlabsEvent");
+      console.log(this);
       console.log("_for = " + _for + "   _type = " + _type);
+/*
+      this.event_Tips = true;                // _for = streamlabs       _type = donation
+      this.event_TwitchFollows = true;       // _for = twitch_account   _type = follow
+      this.event_TwitchBitsCheers = true;    // _for = twitch_account   _type = bits
+      this.event_TwitchSubsAndResubs = true;          // _for = twitch_account   _type = subscriptions
+      */
+      if (_for == "streamlabs" && _type == "donation" && !this.event_Tips)
+      {
+         return;
+      }
+
+      if (_for == "twitch_account" && _type == "follow" && !this.event_TwitchFollows)
+      {
+         return;
+      }
+
+      if (_for == "twitch_account" && _type == "bits" && !this.event_TwitchBitsCheers)
+      {
+         return;
+      }
+
+      if (_for == "twitch_account" && _type == "subscriptions" && !this.event_TwitchSubsAndResubs)
+      {
+         return;
+      }
 
       // todo, make sure this is a event we are interested in.
       // todo, kill any previous timers, should we have a destroy method (deleteTimers) and store the object in webstorage and reset it that way?
@@ -48,106 +74,111 @@ class TipJar_Autohide
       this.container_bits.style.opacity = this.bits_opacity;
       this.container_cup.style.opacity = this.cup_opacity;
 
-      this.cup_timerId = setTimeout(this.onTipJarCupFadein, this.cup_fadeinTimeout);
-      this.bits_timerId = setTimeout(this.onTipJarBitsFadein, this.bits_fadeinTimeout);
+      this.cup_timerId = setTimeout(this.onTipJarCupFadein.bind(null,this), this.cup_fadeinTimeout);
+      this.bits_timerId = setTimeout(this.onTipJarBitsFadein.bind(null,this), this.bits_fadeinTimeout);
 
    }
 
-   onTipJarBitsFadein()
+   onTipJarBitsFadein(instance)
    {
 
-      console.log("TipJar_Autohide::onTipJarBitsFadein");
-      console.log(this);
-      console.log( this.container_cup);
-      this.bits_opacity += this.addition;
+      //console.log("TipJar_Autohide::onTipJarBitsFadein");
+      //console.log(this);
+      //console.log( this.container_cup);
+      instance.bits_opacity += instance.addition;
 
-      if (this.bits_opacity > 1)
+      if (instance.bits_opacity > 1)
       {
-         this.bits_opacity = 1.0;
+         instance.bits_opacity = 1.0;
       }
 
-      this.container_cup.style.opacity = this.bits_opacity;
+      instance.container_bits.style.opacity = instance.bits_opacity;
 
-      if (this.bits_opacity < 1)
+      if (instance.bits_opacity < 1)
       {
-         this.bits_timerId = setTimeout(this.onTipJarBitsFadein, this.timeoutFrequency);
+         instance.bits_timerId = setTimeout(instance.onTipJarBitsFadein.bind(null, instance), instance.timeoutFrequency);
          //localStorage.setItem("autohide_bits_timerId", autohide_bits_timerId+"");
       } else
       {
-         bits_timerId = setTimeout(this.onTipJarBitsFadeout, this.bits_inactivityTimeout);
+         instance.bits_timerId = setTimeout(instance.onTipJarBitsFadeout.bind(null, instance), instance.bits_inactivityTimeout);
          //localStorage.setItem("autohide_bits_timerId", autohide_bits_timerId+"");
       }
    }
 
-   onTipJarCupFadein()
+   onTipJarCupFadein(instance)
    {
-      console.log("TipJar_Autohide::onTipJarCupFadein");
-      console.log(this);
-      console.log( this.container_bits);
-      this.cup_opacity += this.addition;
+     // console.log("TipJar_Autohide::onTipJarCupFadein");
+      //console.log(this);
+      //console.log( this.container_bits);
+      instance.cup_opacity += instance.addition;
 
-      if (this.cup_opacity > 1)
+      if (instance.cup_opacity > 1)
       {
-         this.cup_opacity = 1.0;
+         instance.cup_opacity = 1.0;
       }
-      this.container_bits.style.opacity = this.cup_opacity;
+      instance.container_cup.style.opacity = instance.cup_opacity;
 
-       if (this.cup_opacity < 1)
+       if (instance.cup_opacity < 1)
       {
-         this.cup_timerId = setTimeout(this.onTipJarCupFadein, this.timeoutFrequency);
+         instance.cup_timerId = setTimeout(instance.onTipJarCupFadein.bind(null, instance), instance.timeoutFrequency);
          // 	localStorage.setItem("autohide_cup_timerId", autohide_cup_timerId+"");
       } else
       {
-         this.cup_timerId = setTimeout(this.onTipJarCupFadeout, this.cup_inactivityTimeout);
+         instance.cup_timerId = setTimeout(instance.onTipJarCupFadeout.bind(null, instance), instance.cup_inactivityTimeout);
          //   localStorage.setItem("autohide_cup_timerId", autohide_cup_timerId+"");
       }
    }
 
 
-   onTipJarBitsFadeout()
+   onTipJarBitsFadeout(instance)
    {
+      /*
+      console.log("TipJar_Autohide::onTipJarBitsFadeout");
+      console.log("this = ");
+      console.log(this);
+      console.log("instance = ");
+      console.log(instance);
+      */
+      instance.bits_opacity -= instance.subtract;
+//      console.log("onTipJarFadeout opacity = " + instance.bits_opacity);
 
-
-      this.bits_opacity -= this.subtract;
-      console.log("onTipJarFadeout opacity = " + this.bits_opacity);
-
-      if (this.bits_opacity < 0)
+      if (instance.bits_opacity < 0)
       {
-         this.bits_opacity = 0.0;
+         instance.bits_opacity = 0.0;
       }
 
-      this.container_bits.style.opacity = this.bits_opacity;
+      instance.container_bits.style.opacity = instance.bits_opacity;
       //widget.style.opacity = autohide_opacity;
 
-      if (this.bits_opacity > 0)
+      if (instance.bits_opacity > 0)
       {
-         this.bits_timerId = setTimeout(this.onTipJarBitsFadeout, this.timeoutFrequency);
+         instance.bits_timerId = setTimeout(instance.onTipJarBitsFadeout.bind(null, instance), instance.timeoutFrequency);
       } else
       {
-         this.bits_timerId = null;
+         instance.bits_timerId = null;
       }
    }
 
 
 
-   onTipJarCupFadeout()
+   onTipJarCupFadeout(instance)
    {
-      this.cup_opacity -= this.subtract;
+      instance.cup_opacity -= instance.subtract;
       //console.log("onTipJarFadeout opacity = " + autohide_opacity);
 
-      if (this.cup_opacity < 0)
+      if (instance.cup_opacity < 0)
       {
-         this.cup_opacity = 0.0;
+         instance.cup_opacity = 0.0;
       }
 
-      this.cup_container.style.opacity = this.cup_opacity;
+      instance.container_cup.style.opacity = instance.cup_opacity;
 
-      if (this.cup_opacity > 0)
+      if (instance.cup_opacity > 0)
       {
-         this.cup_timerId = setTimeout(this.onTipJarCupFadeout, this.timeoutFrequency);
+         instance.cup_timerId = setTimeout(instance.onTipJarCupFadeout.bind(null, instance), instance.timeoutFrequency);
       } else
       {
-         this.cup_timerId = null;
+         instance.cup_timerId = null;
       }
    }
 
@@ -155,6 +186,8 @@ class TipJar_Autohide
    onSocketIoLoaded(instance)
    {
       console.log("socket.io.js successfully loaded");
+      console.log("instance");
+      console.log(instance);
       //		console.log("p equals");
       //	console.log(p);
       // 		console.log(this);
@@ -202,11 +235,31 @@ class TipJar_Autohide
       // parse configuration values, set default ones
 
       // assume all events, up to user to copy from TipJar.config.types (convinience method?)
-      this.event_Tips = true;
-      this.event_TwitchFollows = true;
-      this.event_TwitchBitsCheers = true;
-      this.event_TwitchSubs = true;
-      this.event_TwitchResubs = true;
+      this.event_Tips = true;                // _for = streamlabs       _type = donation
+      this.event_TwitchFollows = true;       // _for = twitch_account   _type = follow
+      this.event_TwitchBitsCheers = true;    // _for = twitch_account   _type = bits
+      this.event_TwitchSubsAndResubs = true;          // _for = twitch_account   _type = subscriptions
+
+      if (this.config.event_Tips)
+      {
+         this.event_Tips = this.config.event_Tips;
+      }
+
+      if (this.config.event_TwitchFollows)
+      {
+         this.event_TwitchFollows = this.config.event_TwitchFollows;
+      }
+
+      if (this.config.event_TwitchBitsCheers)
+      {
+         this.event_TwitchBitsCheers = this.config.event_TwitchBitsCheers;
+      }
+
+      if (this.config.event_TwitchSubsAndResubs)
+      {
+         this.event_TwitchSubsAndResubs = this.config.event_TwitchSubsAndResubs;
+      }
+
 
       // not exposed in configuration object
       this.timeoutFrequency = 16; // 60 fps
@@ -217,8 +270,30 @@ class TipJar_Autohide
       this.cup_inactivityTimeout = 30000; // 30 seconds
       this.bits_inactivityTimeout = 28000; // 28 seconds
 
+      if (this.config.cup_inactivityTimeout)
+      {
+         this.cup_inactivityTimeout = this.config.cup_inactivityTimeout;
+      }
+
+      if (this.config.bits_inactivityTimeout)
+      {
+         this.bits_inactivityTimeout = this.config.bits_inactivityTimeout;
+      }
+
+
+
       this.cup_fadeinTimeout = 0;
       this.bits_fadeinTimeout = 850;
+
+      if (this.config.cup_fadeinTimeout)
+      {
+         this.cup_fadeinTimeout = this.config.cup_fadeinTimeout;
+      }
+
+      if (this.config.bits_fadeinTimeout)
+      {
+         this.bits_fadeinTimeout = this.config.bits_fadeinTimeout;
+      }
 
       this.cup_opacity = 1.0;
       this.bits_opacity = 1.0;
