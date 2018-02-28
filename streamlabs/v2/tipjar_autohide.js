@@ -235,9 +235,21 @@ class TipJar_Autohide
       // not exposed in configuration object
       this.timeoutFrequency = 16; // 60 fps
 
-      // not exposed in configuration object
-      this.subtract = 0.035;
-      this.addition = 0.035;
+      this.fadeinTime = 500;
+      this.fadeoutTime = 500;
+
+      if (this.config.fadeinTime)
+      {
+         this.fadeinTime = this.config.fadeinTime;
+      }
+
+      if (this.config.fadeoutTime)
+      {
+         this.fadeoutTime = this.config.fadeoutTime;
+      }
+
+      this.subtract = this.timeoutFrequency / this.fadeoutTime;
+      this.addition = this.timeoutFrequency / this.fadeinTime;
 
       this.cup_inactivityTimeout = 30000; // 30 seconds
       this.bits_inactivityTimeout = 28000; // 28 seconds
