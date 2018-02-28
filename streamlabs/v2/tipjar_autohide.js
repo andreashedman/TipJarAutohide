@@ -174,7 +174,7 @@ class TipJar_Autohide
       }
    }
 
-
+/*
    onSocketEvent(eventData)
    {
       console.log("streamlabs event");
@@ -183,13 +183,19 @@ class TipJar_Autohide
       console.log(this);
       this.onStreamlabsEvent(eventData.for, eventData.type);
    }
-
+*/
    onSocketIoLoaded()
    {
       console.log("socket.io.js successfully loaded");
   
       var streamlabs = io("https://sockets.streamlabs.com?token=" + this.socketToken);
-      streamlabs.on('event', this.onSocketEvent.bind(this));
+      streamlabs.on('event', () => {
+         console.log("streamlabs event");
+         console.log("eventData.for = " + eventData.for + "   eventData.type = " + eventData.type);
+         console.log("this = ");
+         console.log(this);
+         this.onStreamlabsEvent(eventData.for, eventData.type);
+      });
       /*
       streamlabs.on('event', function (eventData)
       {
