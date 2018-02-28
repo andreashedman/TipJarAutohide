@@ -189,7 +189,7 @@ class TipJar_Autohide
       console.log("socket.io.js successfully loaded");
   
       var streamlabs = io("https://sockets.streamlabs.com?token=" + this.socketToken);
-      streamlabs.on('event', onSocketEvent.bind(this));
+      streamlabs.on('event', this.onSocketEvent.bind(this));
       /*
       streamlabs.on('event', function (eventData)
       {
