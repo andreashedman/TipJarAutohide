@@ -7,19 +7,19 @@ class TipJar_Autohide
 
    }
 
-   deleteTimers(instance)
+   deleteTimers()
    {
       console.log("TipJar_Autohide::deleteTimers");
-      if (instance.cup_timerId != null)
+      if (this.cup_timerId != null)
       {
-         clearTimeout(instance.cup_timerId);
-         instance.cup_timerId = null;
+         clearTimeout(this.cup_timerId);
+         this.cup_timerId = null;
       }
 
-      if (instance.bits_timerId != null)
+      if (this.bits_timerId != null)
       {
-         clearTimeout(instance.bits_timerId);
-         instance.bits_timerId = null;
+         clearTimeout(this.bits_timerId);
+         this.bits_timerId = null;
       }
    }
 
@@ -75,134 +75,122 @@ class TipJar_Autohide
       this.container_bits.style.opacity = this.bits_opacity;
       this.container_cup.style.opacity = this.cup_opacity;
 
-      this.cup_timerId = setTimeout(this.onTipJarCupFadein.bind(null,this), this.cup_fadeinTimeout);
-      this.bits_timerId = setTimeout(this.onTipJarBitsFadein.bind(null,this), this.bits_fadeinTimeout);
+      this.cup_timerId = setTimeout(this.onTipJarCupFadein.bind(this), this.cup_fadeinTimeout);
+      this.bits_timerId = setTimeout(this.onTipJarBitsFadein.bind(this), this.bits_fadeinTimeout);
 
    }
 
-   onTipJarBitsFadein(instance)
+   onTipJarBitsFadein()
    {
 
       //console.log("TipJar_Autohide::onTipJarBitsFadein");
       //console.log(this);
       //console.log( this.container_cup);
-      instance.bits_opacity += instance.addition;
+      this.bits_opacity += this.addition;
 
-      if (instance.bits_opacity > 1)
+      if (this.bits_opacity > 1)
       {
-         instance.bits_opacity = 1.0;
+         this.bits_opacity = 1.0;
       }
 
-      instance.container_bits.style.opacity = instance.bits_opacity;
+      this.container_bits.style.opacity = this.bits_opacity;
 
-      if (instance.bits_opacity < 1)
+      if (this.bits_opacity < 1)
       {
-         instance.bits_timerId = setTimeout(instance.onTipJarBitsFadein.bind(null, instance), instance.timeoutFrequency);
+         this.bits_timerId = setTimeout(this.onTipJarBitsFadein.bind(this), this.timeoutFrequency);
          //localStorage.setItem("autohide_bits_timerId", autohide_bits_timerId+"");
       } else
       {
-         instance.bits_timerId = setTimeout(instance.onTipJarBitsFadeout.bind(null, instance), instance.bits_inactivityTimeout);
+         this.bits_timerId = setTimeout(this.onTipJarBitsFadeout.bind(this), this.bits_inactivityTimeout);
          //localStorage.setItem("autohide_bits_timerId", autohide_bits_timerId+"");
       }
    }
 
-   onTipJarCupFadein(instance)
+   onTipJarCupFadein()
    {
      // console.log("TipJar_Autohide::onTipJarCupFadein");
       //console.log(this);
       //console.log( this.container_bits);
-      instance.cup_opacity += instance.addition;
+      this.cup_opacity += this.addition;
 
-      if (instance.cup_opacity > 1)
+      if (this.cup_opacity > 1)
       {
-         instance.cup_opacity = 1.0;
+         this.cup_opacity = 1.0;
       }
-      instance.container_cup.style.opacity = instance.cup_opacity;
+      this.container_cup.style.opacity = this.cup_opacity;
 
-       if (instance.cup_opacity < 1)
+       if (this.cup_opacity < 1)
       {
-         instance.cup_timerId = setTimeout(instance.onTipJarCupFadein.bind(null, instance), instance.timeoutFrequency);
+         this.cup_timerId = setTimeout(this.onTipJarCupFadein.bind(this), this.timeoutFrequency);
          // 	localStorage.setItem("autohide_cup_timerId", autohide_cup_timerId+"");
       } else
       {
-         instance.cup_timerId = setTimeout(instance.onTipJarCupFadeout.bind(null, instance), instance.cup_inactivityTimeout);
+         this.cup_timerId = setTimeout(this.onTipJarCupFadeout.bind(this), this.cup_inactivityTimeout);
          //   localStorage.setItem("autohide_cup_timerId", autohide_cup_timerId+"");
       }
    }
 
 
-   onTipJarBitsFadeout(instance)
+   onTipJarBitsFadeout()
    {
-      /*
-      console.log("TipJar_Autohide::onTipJarBitsFadeout");
-      console.log("this = ");
-      console.log(this);
-      console.log("instance = ");
-      console.log(instance);
-      */
-      instance.bits_opacity -= instance.subtract;
-//      console.log("onTipJarFadeout opacity = " + instance.bits_opacity);
+      
+     this.bits_opacity -= this.subtract;
 
-      if (instance.bits_opacity < 0)
+      if (this.bits_opacity < 0)
       {
-         instance.bits_opacity = 0.0;
+         this.bits_opacity = 0.0;
       }
 
-      instance.container_bits.style.opacity = instance.bits_opacity;
-      //widget.style.opacity = autohide_opacity;
+      this.container_bits.style.opacity = this.bits_opacity;
 
-      if (instance.bits_opacity > 0)
+      if (this.bits_opacity > 0)
       {
-         instance.bits_timerId = setTimeout(instance.onTipJarBitsFadeout.bind(null, instance), instance.timeoutFrequency);
+         this.bits_timerId = setTimeout(this.onTipJarBitsFadeout.bind(this), this.timeoutFrequency);
       } else
       {
-         instance.bits_timerId = null;
+         this.bits_timerId = null;
       }
    }
 
 
 
-   onTipJarCupFadeout(instance)
+   onTipJarCupFadeout()
    {
-      instance.cup_opacity -= instance.subtract;
-      //console.log("onTipJarFadeout opacity = " + autohide_opacity);
-
-      if (instance.cup_opacity < 0)
+      this.cup_opacity -= this.subtract;
+      
+      if (this.cup_opacity < 0)
       {
-         instance.cup_opacity = 0.0;
+         this.cup_opacity = 0.0;
       }
 
-      instance.container_cup.style.opacity = instance.cup_opacity;
+      this.container_cup.style.opacity = this.cup_opacity;
 
-      if (instance.cup_opacity > 0)
+      if (this.cup_opacity > 0)
       {
-         instance.cup_timerId = setTimeout(instance.onTipJarCupFadeout.bind(null, instance), instance.timeoutFrequency);
+         this.cup_timerId = setTimeout(this.onTipJarCupFadeout.bind(this), this.timeoutFrequency);
       } else
       {
-         instance.cup_timerId = null;
+         this.cup_timerId = null;
       }
    }
 
 
-   onSocketIoLoaded(instance)
+   onSocketIoLoaded()
    {
       console.log("socket.io.js successfully loaded");
-      console.log("instance");
-      console.log(instance);
-      //		console.log("p equals");
-      //	console.log(p);
-      // 		console.log(this);
-
-      var streamlabs = io("https://sockets.streamlabs.com?token=" + instance.socketToken);
+  
+      var streamlabs = io("https://sockets.streamlabs.com?token=" + this.socketToken);
       streamlabs.on('event', function (eventData)
       {
 
          console.log("streamlabs event");
          console.log("eventData.for = " + eventData.for + "   eventData.type = " + eventData.type);
-         instance.onStreamlabsEvent(eventData.for, eventData.type);
+         console.log("this = ");
+         console.log(this);
+         this.onStreamlabsEvent(eventData.for, eventData.type);
       });
 
-      instance.onStreamlabsEvent("initialize", "initialize");
+      this.onStreamlabsEvent("initialize", "initialize");
    }
 
    initialize()
@@ -302,13 +290,13 @@ class TipJar_Autohide
       this.cup_timerId = null;
       this.bits_timerId = null;
 
-      $(window).on('beforeunload', this.deleteTimers.bind(null, this));
+      $(window).on('beforeunload', this.deleteTimers.bind(this));
 
 
       //   console.log(document);
 
       // TODO: determina what events we are interested in, check widget (The Jar) config
-      $.getScript("https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js", this.onSocketIoLoaded.bind(null, this));
+      $.getScript("https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js", this.onSocketIoLoaded.bind(this));
 
 
       return true;
