@@ -1,10 +1,13 @@
+/*
+   TipJar Autohide - hide streamlabs tip jar (THE JAR)
+   Copyright 2018 - Andreas Hedman
+*/
 class TipJar_Autohide
 {
    constructor(socketToken, config)
    {
       this.socketToken = socketToken;
       this.config = config == null ? {} : config;
-
    }
 
    deleteTimers()
@@ -26,14 +29,8 @@ class TipJar_Autohide
    onStreamlabsEvent(_for, _type)
    {
       console.log("TipJar_Autohide::onStreamlabsEvent");
-      console.log(this);
       console.log("_for = " + _for + "   _type = " + _type);
-/*
-      this.event_Tips = true;                // _for = streamlabs       _type = donation
-      this.event_TwitchFollows = true;       // _for = twitch_account   _type = follow
-      this.event_TwitchBitsCheers = true;    // _for = twitch_account   _type = bits
-      this.event_TwitchSubsAndResubs = true;          // _for = twitch_account   _type = subscriptions
-      */
+
       if (_for == "streamlabs" && _type == "donation" && !this.event_Tips)
       {
          return;
@@ -54,8 +51,6 @@ class TipJar_Autohide
          return;
       }
 
-      // todo, make sure this is a event we are interested in.
-      // todo, kill any previous timers, should we have a destroy method (deleteTimers) and store the object in webstorage and reset it that way?
 
       if (this.cup_timerId != null)
       {
@@ -84,8 +79,6 @@ class TipJar_Autohide
    {
 
       //console.log("TipJar_Autohide::onTipJarBitsFadein");
-      //console.log(this);
-      //console.log( this.container_cup);
       this.bits_opacity += this.addition;
 
       if (this.bits_opacity > 1)
@@ -98,19 +91,15 @@ class TipJar_Autohide
       if (this.bits_opacity < 1)
       {
          this.bits_timerId = setTimeout(this.onTipJarBitsFadein.bind(this), this.timeoutFrequency);
-         //localStorage.setItem("autohide_bits_timerId", autohide_bits_timerId+"");
       } else
       {
          this.bits_timerId = setTimeout(this.onTipJarBitsFadeout.bind(this), this.bits_inactivityTimeout);
-         //localStorage.setItem("autohide_bits_timerId", autohide_bits_timerId+"");
       }
    }
 
    onTipJarCupFadein()
    {
      // console.log("TipJar_Autohide::onTipJarCupFadein");
-      //console.log(this);
-      //console.log( this.container_bits);
       this.cup_opacity += this.addition;
 
       if (this.cup_opacity > 1)
@@ -122,11 +111,9 @@ class TipJar_Autohide
        if (this.cup_opacity < 1)
       {
          this.cup_timerId = setTimeout(this.onTipJarCupFadein.bind(this), this.timeoutFrequency);
-         // 	localStorage.setItem("autohide_cup_timerId", autohide_cup_timerId+"");
       } else
       {
          this.cup_timerId = setTimeout(this.onTipJarCupFadeout.bind(this), this.cup_inactivityTimeout);
-         //   localStorage.setItem("autohide_cup_timerId", autohide_cup_timerId+"");
       }
    }
 
@@ -174,16 +161,6 @@ class TipJar_Autohide
       }
    }
 
-/*
-   onSocketEvent(eventData)
-   {
-      console.log("streamlabs event");
-      console.log("eventData.for = " + eventData.for + "   eventData.type = " + eventData.type);
-      console.log("this = ");
-      console.log(this);
-      this.onStreamlabsEvent(eventData.for, eventData.type);
-   }
-*/
    onSocketIoLoaded()
    {
       console.log("socket.io.js successfully loaded");
@@ -192,21 +169,9 @@ class TipJar_Autohide
       streamlabs.on('event', (eventData) => {
          console.log("streamlabs event");
          console.log("eventData.for = " + eventData.for + "   eventData.type = " + eventData.type);
-         console.log("this = ");
-         console.log(this);
          this.onStreamlabsEvent(eventData.for, eventData.type);
       });
-      /*
-      streamlabs.on('event', function (eventData)
-      {
-
-         console.log("streamlabs event");
-         console.log("eventData.for = " + eventData.for + "   eventData.type = " + eventData.type);
-         console.log("this = ");
-         console.log(this);
-         this.onStreamlabsEvent(eventData.for, eventData.type);
-      });
-      */
+     
       this.onStreamlabsEvent("initialize", "initialize");
    }
 
@@ -270,6 +235,7 @@ class TipJar_Autohide
       // not exposed in configuration object
       this.timeoutFrequency = 16; // 60 fps
 
+      // not exposed in configuration object
       this.subtract = 0.035;
       this.addition = 0.035;
 
@@ -285,8 +251,6 @@ class TipJar_Autohide
       {
          this.bits_inactivityTimeout = this.config.bits_inactivityTimeout;
       }
-
-
 
       this.cup_fadeinTimeout = 0;
       this.bits_fadeinTimeout = 850;
@@ -309,12 +273,7 @@ class TipJar_Autohide
 
       $(window).on('beforeunload', this.deleteTimers.bind(this));
 
-
-      //   console.log(document);
-
-      // TODO: determina what events we are interested in, check widget (The Jar) config
       $.getScript("https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js", this.onSocketIoLoaded.bind(this));
-
 
       return true;
    }
