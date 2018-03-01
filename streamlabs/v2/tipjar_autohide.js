@@ -1,6 +1,6 @@
 /*
    TipJar Autohide - hide streamlabs tip jar (THE JAR)
-   Copyright 2018 - Andreas Hedman
+   Copyright 2018 - Andreas Hedman (CMDR Black Salve)
 */
 class TipJar_Autohide
 {
@@ -31,22 +31,34 @@ class TipJar_Autohide
       console.log("TipJar_Autohide::onStreamlabsEvent");
       console.log("_for = " + _for + "   _type = " + _type);
 
-      if (_for == "streamlabs" && _type == "donation" && !this.event_Tips)
+      var skip = true;
+
+      if (_for == "initialize" && _type == "initialize" && this.event_Tips)
       {
-         return;
+         skip = false;
       }
 
-      if (_for == "twitch_account" && _type == "follow" && !this.event_TwitchFollows)
+      if (_for == "streamlabs" && _type == "donation" && this.event_Tips)
       {
-         return;
+         skip = false;
+      }
+
+      if (_for == "twitch_account" && _type == "follow" && this.event_TwitchFollows)
+      {
+         skip = false;
       }
 
       if (_for == "twitch_account" && _type == "bits" && !this.event_TwitchBitsCheers)
       {
-         return;
+         skip = false;
       }
 
       if (_for == "twitch_account" && _type == "subscriptions" && !this.event_TwitchSubsAndResubs)
+      {
+         skip = false;
+      }
+
+      if (skip)
       {
          return;
       }
@@ -235,21 +247,21 @@ class TipJar_Autohide
       // not exposed in configuration object
       this.timeoutFrequency = 16; // 60 fps
 
-      this.fadeinTime = 500;
-      this.fadeoutTime = 500;
+      this.fadeinDuration = 500;
+      this.fadeoutDuration = 500;
 
-      if (this.config.fadeinTime)
+      if (this.config.fadeinDuration)
       {
-         this.fadeinTime = this.config.fadeinTime;
+         this.fadeinDuration = this.config.fadeinDuration;
       }
 
-      if (this.config.fadeoutTime)
+      if (this.config.fadeoutDuration)
       {
-         this.fadeoutTime = this.config.fadeoutTime;
+         this.fadeoutDuration = this.config.fadeoutDuration;
       }
 
-      this.subtract = this.timeoutFrequency / this.fadeoutTime;
-      this.addition = this.timeoutFrequency / this.fadeinTime;
+      this.subtract = this.timeoutFrequency / this.fadeoutDuration;
+      this.addition = this.timeoutFrequency / this.fadeinDuration;
 
       this.cup_inactivityTimeout = 30000; // 30 seconds
       this.bits_inactivityTimeout = 28000; // 28 seconds
