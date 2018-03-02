@@ -50,7 +50,7 @@ class TipJar_Autohide
          if (!this.event_TwitchBitsCheers)
             return false;
       }
-      else if (_for == "twitch_account" && _type == "subscriptions")
+      else if (_for == "twitch_account" && _type == "subscription")
       {
          if (!this.event_TwitchSubsAndResubs)
             return false;
