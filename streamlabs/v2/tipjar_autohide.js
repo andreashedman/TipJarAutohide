@@ -31,38 +31,35 @@ class TipJar_Autohide
       console.log("TipJar_Autohide::onStreamlabsEvent");
       console.log("_for = " + _for + "   _type = " + _type);
 
-      var skip = true;
-
-      if (_for == "initialize" && _type == "initialize" && this.event_Tips)
+      if (_for == "initialize" && _type == "initialize")
       {
-         skip = false;
+         // always accept this event
       }
-
-      if (_for == "streamlabs" && _type == "donation" && this.event_Tips)
+      else if (_for == "streamlabs" && _type == "donation")
       {
-         skip = false;
+         if (!this.event_Tips)
+            return false;
       }
-
-      if (_for == "twitch_account" && _type == "follow" && this.event_TwitchFollows)
+      else if (_for == "twitch_account" && _type == "follow")
       {
-         skip = false;
+         if (!this.event_TwitchFollows)
+            return false;
       }
-
-      if (_for == "twitch_account" && _type == "bits" && !this.event_TwitchBitsCheers)
+      else if (_for == "twitch_account" && _type == "bits")
       {
-         skip = false;
+         if (!this.event_TwitchBitsCheers)
+            return false;
       }
-
-      if (_for == "twitch_account" && _type == "subscriptions" && !this.event_TwitchSubsAndResubs)
+      else if (_for == "twitch_account" && _type == "subscriptions")
       {
-         skip = false;
+         if (!this.event_TwitchSubsAndResubs)
+            return false;
       }
-
-      if (skip)
+      else 
       {
-         return;
+         // unknown event
+         return false;
       }
-
 
       if (this.cup_timerId != null)
       {
@@ -75,9 +72,6 @@ class TipJar_Autohide
          clearTimeout(this.bits_timerId);
          this.bits_timerId = null;
       }
-
-      // 	autohide_bits_opacity = 1.0;
-      // 	autohide_cup_opacity = 1.0;
 
       this.container_bits.style.opacity = this.bits_opacity;
       this.container_cup.style.opacity = this.cup_opacity;
@@ -111,7 +105,7 @@ class TipJar_Autohide
 
    onTipJarCupFadein()
    {
-     // console.log("TipJar_Autohide::onTipJarCupFadein");
+      // console.log("TipJar_Autohide::onTipJarCupFadein");
       this.cup_opacity += this.addition;
 
       if (this.cup_opacity > 1)
@@ -120,7 +114,7 @@ class TipJar_Autohide
       }
       this.container_cup.style.opacity = this.cup_opacity;
 
-       if (this.cup_opacity < 1)
+      if (this.cup_opacity < 1)
       {
          this.cup_timerId = setTimeout(this.onTipJarCupFadein.bind(this), this.timeoutFrequency);
       } else
@@ -132,8 +126,8 @@ class TipJar_Autohide
 
    onTipJarBitsFadeout()
    {
-      
-     this.bits_opacity -= this.subtract;
+
+      this.bits_opacity -= this.subtract;
 
       if (this.bits_opacity < 0)
       {
@@ -156,7 +150,7 @@ class TipJar_Autohide
    onTipJarCupFadeout()
    {
       this.cup_opacity -= this.subtract;
-      
+
       if (this.cup_opacity < 0)
       {
          this.cup_opacity = 0.0;
@@ -176,14 +170,15 @@ class TipJar_Autohide
    onSocketIoLoaded()
    {
       console.log("socket.io.js successfully loaded");
-  
+
       var streamlabs = io("https://sockets.streamlabs.com?token=" + this.socketToken);
-      streamlabs.on('event', (eventData) => {
+      streamlabs.on('event', (eventData) =>
+      {
          console.log("streamlabs event");
          console.log("eventData.for = " + eventData.for + "   eventData.type = " + eventData.type);
          this.onStreamlabsEvent(eventData.for, eventData.type);
       });
-     
+
       this.onStreamlabsEvent("initialize", "initialize");
    }
 
