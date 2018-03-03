@@ -54,6 +54,10 @@ class TipJar_Autohide
       {
          if (!this.event_TwitchSubsAndResubs)
             return false;
+      } if (_for == undefined && _type == "donation")
+      {
+         if (!this.event_donation)
+            return false;
       }
       else 
       {
@@ -199,7 +203,6 @@ class TipJar_Autohide
       console.log("container_cup");
       console.log(this.container_cup);
 
-
       if (this.container_bits == null || this.container_bits == undefined)
       {
          return false;
@@ -216,7 +219,8 @@ class TipJar_Autohide
       this.event_Tips = true;                // _for = streamlabs       _type = donation
       this.event_TwitchFollows = true;       // _for = twitch_account   _type = follow
       this.event_TwitchBitsCheers = true;    // _for = twitch_account   _type = bits
-      this.event_TwitchSubsAndResubs = true;          // _for = twitch_account   _type = subscriptions
+      this.event_TwitchSubsAndResubs = true;          // _for = twitch_account   _type = subscription
+      this.event_donation = true;
 
       if (this.config.event_Tips)
       {
