@@ -54,7 +54,7 @@ class TipJar_Autohide
       {
          if (!this.event_TwitchSubsAndResubs)
             return false;
-      } if (_for == undefined && _type == "donation")
+      } else if (_for == undefined && _type == "donation")
       {
          if (!this.event_donation)
             return false;
